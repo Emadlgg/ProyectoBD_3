@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Exportar Reportes{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h5 class="m-0 font-weight-bold text-primary">Exportar Reportes</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-success">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-success">
+                            <i class="fas fa-file-excel"></i> Exportar a Excel
+                        </h5>
+                        <p class="card-text">Genera un archivo XLSX con todos los préstamos</p>
+                        <a href="/exportar_excel" class="btn btn-success">
+                            <i class="fas fa-download"></i> Descargar
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-danger">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-danger">
+                            <i class="fas fa-file-pdf"></i> Exportar a PDF
+                        </h5>
+                        <p class="card-text">Genera un reporte en formato PDF listo para imprimir</p>
+                        <a href="/exportar_pdf" class="btn btn-danger">
+                            <i class="fas fa-download"></i> Descargar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-info mt-4">
+            <h6><i class="fas fa-info-circle"></i> Opciones avanzadas:</h6>
+            <p class="mb-0">
+                Para reportes personalizados, usa los filtros en la página de 
+                <a href="/">Reportes</a> y luego exporta los resultados.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/exportar.js"></script>
+{% endblock %}

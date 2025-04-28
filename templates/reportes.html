@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Reportes{% endblock %}
+
+{% block content %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h5 class="m-0 font-weight-bold text-primary">Generar Reportes</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="/generar_reporte" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Tipo de Reporte</label>
+                <select name="tipo_reporte" class="form-select" required>
+                    <option value="" selected disabled>Seleccione...</option>
+                    <option value="prestamos">Préstamos</option>
+                    <option value="atrasos">Atrasos en devolución</option>
+                    <option value="reservas">Reservas activas</option>
+                    <option value="sanciones">Sanciones pendientes</option>
+                    <option value="libros_populares">Libros más populares</option>
+                </select>
+            </div>
+            
+            <div class="col-md-4">
+                <label class="form-label">Fecha Inicio</label>
+                <input type="date" name="fecha_inicio" class="form-control" required>
+            </div>
+            
+            <div class="col-md-4">
+                <label class="form-label">Fecha Fin</label>
+                <input type="date" name="fecha_fin" class="form-control" required>
+            </div>
+            
+            <div class="col-md-6">
+                <label class="form-label">Editorial</label>
+                <select name="editorial" class="form-select">
+                    <option value="todas">Todas las editoriales</option>
+                    {% for editorial in editoriales %}
+                    <option value="{{ editorial[0] }}">{{ editorial[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-6">
+                <label class="form-label">Categoría</label>
+                <select name="categoria" class="form-select">
+                    <option value="todas">Todas las categorías</option>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria[0] }}">{{ categoria[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Generar Reporte
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if resultados %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h5 class="m-0 font-weight-bold text-primary">Resultados</h5>
+        <span class="badge bg-primary">Total: {{ resultados|length }} registros</span>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID Préstamo</th>
+                        <th>Libro</th>
+                        <th>Usuario</th>
+                        <th>Fecha Préstamo</th>
+                        <th>Fecha Devolución</th>
+                        <th>Días Atraso</th>
+                        <th>Editorial</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in resultados %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3].strftime('%d/%m/%Y') if row[3] else '' }}</td>
+                        <td>{{ row[4].strftime('%d/%m/%Y') if row[4] else 'Pendiente' }}</td>
+                        <td class="{{ 'text-danger fw-bold' if row[5] > 0 else 'text-success' }}">
+                            {{ row[5] }}
+                        </td>
+                        <td>{{ row[6] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if libros and prestamos %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h5 class="m-0 font-weight-bold text-primary">Top 5 Libros más prestados</h5>
+    </div>
+    <div class="card-body">
+        <canvas id="graficaLibros" width="400" height="200"></canvas>
+    </div>
+</div>
+
+<div id="libros-data" hidden>{{ libros|tojson }}</div>
+<div id="prestamos-data" hidden>{{ prestamos|tojson }}</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/graficas.js"></script>
+{% endblock %}
