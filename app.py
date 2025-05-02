@@ -5,7 +5,6 @@ import os
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.secret_key = 'tu_clave_secreta_aqui'  # Cambia esto en producción
 
 # Configuración de PostgreSQL
 def get_db_connection():
